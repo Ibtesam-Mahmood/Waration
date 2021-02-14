@@ -24,8 +24,8 @@ public class Board : MonoBehaviour
     void Start()
     {
         //create highlight and select
-        highlight = Instantiate(highlight, geometry.getAbsolutePos(new Vector3(0, 0)), Quaternion.identity);
-        select = Instantiate(select, geometry.getAbsolutePos(new Vector3(0, 0)), Quaternion.identity);
+        highlight = Instantiate(highlight, geometry.getAbsolutePos(new Vector3(0, 0, 1)), Quaternion.identity);
+        select = Instantiate(select, geometry.getAbsolutePos(new Vector3(0, 0, 1)), Quaternion.identity);
 
     }
 
@@ -80,6 +80,7 @@ public class Board : MonoBehaviour
 
             //Move select
             select.transform.position = tilePosition;
+            Debug.Log(tilePosition);
             select.SetActive(true);
 
             GameStateManager.instance.selectTile(tile);
