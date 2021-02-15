@@ -121,12 +121,14 @@ public class GameStateManager : MonoBehaviour
             //Select peice
             GameObject piece = pieces[tile];
 
+            Piece currentPiece = piece.GetComponent<Piece>();
+
             //cannot select opponent pieces
-            if (piece.GetComponent<Piece>().player != player) return;
+            if (currentPiece.player != player) return;
 
             this.mode = GameMode.MOVE;
 
-            List<Vector2Int> possibleMoves = piece.GetComponent<Piece>().getMovement(tile);
+            List<Vector2Int> possibleMoves = currentPiece.getMovement(tile);
 
             //prune
             possibleMoves = geometry.pruneTiles(possibleMoves);
@@ -149,8 +151,8 @@ public class GameStateManager : MonoBehaviour
                     if(peicePlayer == player)
                     {
                         //Player owned
-                        //TODO: Check requirements for stack
-                        stacks.Add(move);
+                        if (pieces[move].GetComponent<Piece>().power < 5 && currentPiece.power < 5)
+                            stacks.Add(move);
                     }
                     else
                     {
