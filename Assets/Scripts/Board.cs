@@ -80,7 +80,6 @@ public class Board : MonoBehaviour
 
             //Move select
             select.transform.position = tilePosition;
-            Debug.Log(tilePosition);
             select.SetActive(true);
 
             GameStateManager.instance.selectTile(tile);

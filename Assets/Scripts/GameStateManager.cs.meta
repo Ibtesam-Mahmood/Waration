@@ -6,6 +6,16 @@ MonoImporter:
   defaultReferences:
   - gameBoard: {fileID: 3249871654890077626, guid: 582b56f6c62e3ac43be9e4d354584724,
       type: 3}
+  - pawnPrefab: {fileID: 6108540073962266935, guid: a601822cef6fa478795163dd01b46f32,
+      type: 3}
+  - veternPrefab: {fileID: 4719763605760805394, guid: 627327b71dfbf4ee6bbb27c7d3fb26ab,
+      type: 3}
+  - knightPrefab: {fileID: 1654193984832672554, guid: 27fabe37bce4a49d79b21bcaa4458a58,
+      type: 3}
+  - heroPrefab: {fileID: 3516107605743448628, guid: 8c1199ba950234704bbffb153d1aa7cd,
+      type: 3}
+  - magePrefab: {fileID: 9027065067766213634, guid: e2646294a5bef43f5911a9a465520352,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
