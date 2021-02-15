@@ -48,6 +48,8 @@ public class GameStateManager : MonoBehaviour
         //Instantiate Board, instantiates the board geometry
         gameBoard = Instantiate(gameBoard, Global.BOARD_POS, Quaternion.identity);
         spawnPiece(1, Player.BLUE, new Vector2Int(5, 5));
+        spawnPiece(2, Player.BLUE, new Vector2Int(1, 1));
+        spawnPiece(3, Player.BLUE, new Vector2Int(3, 3));
 
 
     }
@@ -61,7 +63,7 @@ public class GameStateManager : MonoBehaviour
     //~~~~~~~~~~~~ State Functions ~~~~~~~~~~~~~~~~
 
     /// Spawn a piece in at a given tile
-    public void spawnPiece(int level, Player player, Vector2Int tile)
+    public void spawnPiece(int power, Player player, Vector2Int tile)
     {
 
         //Ensure no pieces are on the current tile
@@ -72,33 +74,32 @@ public class GameStateManager : MonoBehaviour
         Vector3 absoluteLocation = geometry.getTilePosition(tile);
 
         //Determione piece
-        switch (level)
+        switch (power)
         {
 
             case 2:
-                newPiece = veternPrefab;
+                newPiece = Instantiate(veternPrefab, absoluteLocation - new Vector3(0, 0, 1), Quaternion.identity);
                 break;
 
             case 3:
-                newPiece = knightPrefab;
+                newPiece = Instantiate(knightPrefab, absoluteLocation - new Vector3(0, 0, 1), Quaternion.identity);
                 break;
 
             case 4:
-                newPiece = heroPrefab;
+                newPiece = Instantiate(heroPrefab, absoluteLocation - new Vector3(0, 0, 1), Quaternion.identity);
                 break;
 
             case 5:
-                newPiece = magePrefab;
+                newPiece = Instantiate(magePrefab, absoluteLocation - new Vector3(0, 0, 1), Quaternion.identity);
                 break;
 
             default:
-                newPiece = pawnPrefab;
+                newPiece = Instantiate(pawnPrefab, absoluteLocation - new Vector3(0, 0, 1), Quaternion.identity);
                 break;
 
         }
 
         //Create piece
-        newPiece = Instantiate(newPiece, absoluteLocation - new Vector3(0, 0, 1), Quaternion.identity);
         Piece p = newPiece.GetComponent<Piece>();
         p.player = player;
 
@@ -116,12 +117,19 @@ public class GameStateManager : MonoBehaviour
         if (pieces.ContainsKey(tile))
         {
 
+
             //Select peice
             GameObject piece = pieces[tile];
+
+            //cannot select opponent pieces
+            if (piece.GetComponent<Piece>().player != player) return;
 
             this.mode = GameMode.MOVE;
 
             List<Vector2Int> possibleMoves = piece.GetComponent<Piece>().getMovement(tile);
+
+            //prune
+            possibleMoves = geometry.pruneTiles(possibleMoves);
 
             //Organize moves into 3 lists
             List<Vector2Int> moves = new List<Vector2Int>();
@@ -182,22 +190,24 @@ public class GameStateManager : MonoBehaviour
             if (peicePlayer == player)
             {
                 //Player owned, stack
-                stack(selectedTile, tile);
+                stackAction(selectedTile, tile);
             }
             else
             {
                 //Opponent owned, kill
-                kill(selectedTile, tile);
+                killAction(selectedTile, tile);
             }
         }
         else
         {
-            move(selectedTile, tile);
+            moveAction(selectedTile, tile);
         }
+
+        //TODO: calculate zones
     }
 
     //moves the piece
-    public void move(Vector2Int start, Vector2Int dest)
+    public void moveAction(Vector2Int start, Vector2Int dest)
     {
         GameObject piece = pieces[start];
         pieces.Remove(start);
@@ -205,14 +215,37 @@ public class GameStateManager : MonoBehaviour
         pieces[dest] = piece;
     }
 
-    public void kill(Vector2Int start, Vector2Int dest)
+    public void killAction(Vector2Int start, Vector2Int dest)
     {
-
+        GameObject piece = pieces[start];
+        GameObject opponentPiece = pieces[dest];
+        Destroy(opponentPiece);
+        pieces.Remove(start);
+        piece.transform.position = geometry.getTilePosition(dest) - new Vector3(0, 0, 1);
+        pieces[dest] = piece;
     }
 
-    public void stack(Vector2Int start, Vector2Int dest)
+    public void stackAction(Vector2Int start, Vector2Int dest)
     {
+        GameObject piece = pieces[start];
+        GameObject otherPiece = pieces[dest];
 
+        Piece p = piece.GetComponent<Piece>();
+
+        //determine player
+        Player piecePlayer = p.player;
+
+        //determine combinded power
+        int power = p.power + otherPiece.GetComponent<Piece>().power;
+        power = Mathf.Clamp(power, 1, 5);
+
+        Destroy(piece);
+        Destroy(otherPiece);
+
+        pieces.Remove(start);
+        pieces.Remove(dest);
+
+        spawnPiece(power, piecePlayer, dest);
     }
 
     //~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~~~

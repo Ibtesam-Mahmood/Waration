@@ -5,6 +5,11 @@ using UnityEngine;
 public class Pawn : Piece
 {
 
+    public Pawn()
+    {
+        this.power = 1;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,7 +32,7 @@ public class Pawn : Piece
                 Vector2Int tilePos = new Vector2Int(i, j);
                 if(tilePos != tile)
                 {
-                    locations.Add(new Vector2Int(i, j));
+                    locations.Add(tilePos);
                 }
             }
         }

@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Veteran : Piece
 {
+    public Veteran()
+    {
+        this.power = 2;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -19,15 +23,26 @@ public class Veteran : Piece
 
     public override List<Vector2Int> getMovement(Vector2Int tile)
     {
-        //List<Vector2Int> locations = new List<Vector2Int>();
-        return null;
-        //Vector2Int move = tile;
-        //move.x++;
-        //locations.Add(tile);
+        List<Vector2Int> locations = new List<Vector2Int>();
+        for (int i = tile.x - 1; i <= tile.x + 1; i++)
+        {
+            for (int j = tile.y - 1; j <= tile.y + 1; j++)
+            {
+                Vector2Int tilePos = new Vector2Int(i, j);
+                if (tilePos != tile)
+                {
+                    locations.Add(tilePos);
+                }
+            }
+        }
 
-        //Vector2Int move = tile;
-        //tile.x++;
-        //locations.Add(tile);
+        locations.Add(new Vector2Int(tile.x - 2, tile.y));
+        locations.Add(new Vector2Int(tile.x, tile.y - 2));
+        locations.Add(new Vector2Int(tile.x + 2, tile.y));
+        locations.Add(new Vector2Int(tile.x, tile.y + 2));
+
+
+        return locations;
     }
 
     public override Piece stack(Piece peice)

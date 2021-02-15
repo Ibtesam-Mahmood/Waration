@@ -67,6 +67,29 @@ public class BoardGeometry
         return new Vector2Int(x_tile, y_tile);
     }
 
+    //Removes invalid tiles
+    public List<Vector2Int> pruneTiles(List<Vector2Int> tiles)
+    {
+        List<Vector2Int> pruned = new List<Vector2Int>();
+        foreach (Vector2Int tile in tiles)
+        {
+            if(isValidTile(tile))
+            {
+                //Remove tile
+                pruned.Add(tile);
+            }
+        }
+
+        return pruned;
+    }
+
+    public bool isValidTile(Vector2Int tile)
+    {
+        if (tile.x > 16 || tile.x < 1) return false;
+        if (tile.y > 16 || tile.y < 1) return false;
+        else return true;
+    }
+
     ///Retreives a tile from a absolute position
     public Vector2Int getTileFromAbsolute(Vector3 pos)
     {
