@@ -6,6 +6,8 @@ MonoImporter:
   defaultReferences:
   - gameBoard: {fileID: 3249871654890077626, guid: 582b56f6c62e3ac43be9e4d354584724,
       type: 3}
+  - spawnButton: {fileID: 8307314816145882098, guid: 95353cb42a7a1474ca7114b5fccc7ce3,
+      type: 3}
   - pawnPrefab: {fileID: 6108540073962266935, guid: a601822cef6fa478795163dd01b46f32,
       type: 3}
   - veternPrefab: {fileID: 4719763605760805394, guid: 627327b71dfbf4ee6bbb27c7d3fb26ab,

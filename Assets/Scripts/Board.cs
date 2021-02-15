@@ -112,7 +112,7 @@ public class Board : MonoBehaviour
     }
 
     //enables the select. unselects if the type is retapped
-    void selectTile(Vector2Int tile)
+    public void selectTile(Vector2Int tile)
     {
 
         if (tile == GameStateManager.instance.selectedTile)
@@ -147,7 +147,7 @@ public class Board : MonoBehaviour
     }
 
     //Disables the select
-    void unselectTile() 
+    public void unselectTile() 
     {
 
         //Remove all highlights

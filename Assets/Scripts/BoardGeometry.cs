@@ -38,14 +38,14 @@ public class BoardGeometry
         float boardSize = size.x;
         pos = GameObject.Find("Main Camera").GetComponent<Camera>().ScreenToWorldPoint(pos);
         pos.y *= -1;
-        return pos + boardPosition.position + new Vector3(boardSize / 2, boardSize / 2, 0);
+        return pos - boardPosition.position + new Vector3(boardSize / 2, boardSize / 2, 0);
     }
 
     /// Converts a board relative position to an absolute position
     public Vector3 getAbsolutePos(Vector3 pos)
     {
         float boardSize = size.x;
-        pos = pos - boardPosition.position - new Vector3(boardSize / 2, boardSize / 2, 0);
+        pos = pos + boardPosition.position - new Vector3(boardSize / 2, boardSize / 2, 0);
         pos.y *= -1;
         return pos;
     }

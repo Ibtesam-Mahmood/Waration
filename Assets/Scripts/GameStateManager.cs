@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Application;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameStateManager : MonoBehaviour
 {   
@@ -28,6 +29,9 @@ public class GameStateManager : MonoBehaviour
     ///The board to be rendered
     public GameObject gameBoard;
 
+    /// The spawn button
+    public GameObject spawnButton;
+
     //pieces and piece types
     public GameObject pawnPrefab;
     public GameObject veternPrefab;
@@ -45,11 +49,12 @@ public class GameStateManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Set spawn button to inactive
+        spawnButton.GetComponent<Button>().interactable = false;
+
         //Instantiate Board, instantiates the board geometry
         gameBoard = Instantiate(gameBoard, Global.BOARD_POS, Quaternion.identity);
-        spawnPiece(1, Player.BLUE, new Vector2Int(5, 5));
-        spawnPiece(2, Player.BLUE, new Vector2Int(1, 1));
-        spawnPiece(3, Player.BLUE, new Vector2Int(3, 3));
+        spawnPiece(1, Player.RED, new Vector2Int(5, 5));
 
 
     }
@@ -124,7 +129,11 @@ public class GameStateManager : MonoBehaviour
             Piece currentPiece = piece.GetComponent<Piece>();
 
             //cannot select opponent pieces
-            if (currentPiece.player != player) return;
+            if (currentPiece.player != player)
+            {
+                gameBoard.GetComponent<Board>().unselectTile();
+                return;
+            }
 
             this.mode = GameMode.MOVE;
 
@@ -170,6 +179,10 @@ public class GameStateManager : MonoBehaviour
             //Set the move highlights
             gameBoard.GetComponent<Board>().setMoveHighlights(moves, kills, stacks);
         }
+
+        //Set spawn button to active
+        //TODO: based on zone ownership
+        spawnButton.GetComponent<Button>().interactable = true;
     }
 
     //Unselects a tile
@@ -177,6 +190,9 @@ public class GameStateManager : MonoBehaviour
     {
         this.mode = GameMode.NONE;
         selectedTile = Vector2Int.zero;
+
+        //Set spawn button to inactive
+        spawnButton.GetComponent<Button>().interactable = false;
     }
 
     //Uses the selected piece and the action tile to move the piece.
@@ -207,6 +223,8 @@ public class GameStateManager : MonoBehaviour
 
         //TODO: calculate zones
     }
+
+    // ~~~~~~~~~~~~~ Actions ~~~~~~~~~~~~~~~~
 
     //moves the piece
     public void moveAction(Vector2Int start, Vector2Int dest)
@@ -248,6 +266,16 @@ public class GameStateManager : MonoBehaviour
         pieces.Remove(dest);
 
         spawnPiece(power, piecePlayer, dest);
+    }
+
+    // ~~~~~~~~~~~~~ Events ~~~~~~~~~~~~~~~~
+
+    /// Run when the span button is pressed
+    public void OnSpawnPress()
+    {
+        //TODO: restrict turns
+        spawnPiece(1, player, selectedTile);
+        gameBoard.GetComponent<Board>().unselectTile();
     }
 
     //~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~~~
