@@ -1,7 +1,27 @@
+﻿using System;
 using UnityEngine;
 
-public class Global {
+namespace Application
+{
+    public enum Player
+    {
+        RED,
+        BLUE
+    }
 
-  public static readonly Vector3 BOARD_POS = new Vector3(0, 0, 1);
+    public enum GameMode
+    {
+        NONE,
+        MOVE,
+        OPPONENT
+    }
+
+    public static class Global
+    {
+
+        public static readonly Vector3 BOARD_POS = new Vector3(0, 0, 0);
+
+    }
+
 
 }

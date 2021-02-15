@@ -17,15 +17,15 @@ public class Hero : Piece
         
     }
 
-    public override List<Vector2> getMovement()
+    public override List<Vector2Int> getMovement(Vector2Int tile)
     {
-        //List<Vector2> locations = new List<Vector2>();
+        //List<Vector2Int> locations = new List<Vector2Int>();
         return null;
-        //Vector2 move = tile;
+        //Vector2Int move = tile;
         //move.x++;
         //locations.Add(tile);
 
-        //Vector2 move = tile;
+        //Vector2Int move = tile;
         //tile.x++;
         //locations.Add(tile);
     }

@@ -11,7 +11,7 @@ public abstract class Piece : MonoBehaviour
 
     public Player player;
 
-    public abstract List<Vector2> getMovement();
+    public abstract List<Vector2Int> getMovement(Vector2Int tile);
 
     public abstract Piece stack(Piece peice);
 

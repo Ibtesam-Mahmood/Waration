@@ -7,6 +7,8 @@ MonoImporter:
   - highlight: {fileID: 1030699771039860137, guid: 902fa7fa3c4de9845b9cdcbccf597a17,
       type: 3}
   - select: {fileID: 946426107631454800, guid: ca103c98e8d97534da058e582a323675, type: 3}
+  - killHighlight: {fileID: 9089432798620113963, guid: fd04f9e81a19f4eca8aef462b5271708,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

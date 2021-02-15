@@ -52,7 +52,7 @@ public class BoardGeometry
 
     ///Return the tile the the position is pointing to. 
     ///Must be relative position to the board
-    public Vector2 getTile(Vector3 pos)
+    public Vector2Int getTile(Vector3 pos)
     {
         float x_val = pos.x;
         float y_pos = pos.y;
@@ -64,17 +64,17 @@ public class BoardGeometry
         x_tile = Mathf.Clamp(x_tile, 1, TILE_SPAN);
         y_tile = Mathf.Clamp(y_tile, 1, TILE_SPAN);
 
-        return new Vector2(x_tile, y_tile);
+        return new Vector2Int(x_tile, y_tile);
     }
 
     ///Retreives a tile from a absolute position
-    public Vector2 getTileFromAbsolute(Vector3 pos)
+    public Vector2Int getTileFromAbsolute(Vector3 pos)
     {
         return getTile(getRelativePos(pos));
     }
 
     ///Returns the realtive position of a tile from its mapping
-    public Vector3 getTileRelativePosition(Vector2 tiles)
+    public Vector3 getTileRelativePosition(Vector2Int tiles)
     {
         Vector3 tilePosition = getTileCenter(tiles);
         tilePosition.x += tile_height / 2;
@@ -82,13 +82,13 @@ public class BoardGeometry
         return tilePosition;
     }
 
-    public Vector3 getTilePosition(Vector2 tiles)
+    public Vector3 getTilePosition(Vector2Int tiles)
     {
         return getAbsolutePos(getTileRelativePosition(tiles));
     }
 
     ///Returns the realtive position of a tile center from its mapping
-    public Vector3 getTileCenter(Vector2 tiles)
+    public Vector3 getTileCenter(Vector2Int tiles)
     {
         return new Vector3((tiles.x - 1) * tile_height, (tiles.y - 1) * tile_height, 0);
     }

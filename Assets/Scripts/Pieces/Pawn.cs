@@ -17,17 +17,24 @@ public class Pawn : Piece
         
     }
 
-    public override List<Vector2> getMovement()
+    public override List<Vector2Int> getMovement(Vector2Int tile)
     {
-        //List<Vector2> locations = new List<Vector2>();
-        return null;
-        //Vector2 move = tile;
-        //move.x++;
-        //locations.Add(tile);
+        List<Vector2Int> locations = new List<Vector2Int>();
+        for(int i = tile.x - 1; i <= tile.x + 1; i++)
+        {
+            for (int j = tile.y - 1; j <= tile.y + 1; j++)
+            {
+                Vector2Int tilePos = new Vector2Int(i, j);
+                if(tilePos != tile)
+                {
+                    locations.Add(new Vector2Int(i, j));
+                }
+            }
+        }
 
-        //Vector2 move = tile;
-        //tile.x++;
-        //locations.Add(tile);
+
+        return locations;
+
     }
 
     public override Piece stack(Piece peice)
