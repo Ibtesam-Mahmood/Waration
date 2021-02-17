@@ -5,8 +5,9 @@ namespace Application
 {
     public enum Player
     {
-        RED,
-        BLUE
+        GREEN,
+        BLUE,
+        NONE
     }
 
     public enum GameMode

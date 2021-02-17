@@ -24,10 +24,14 @@ public class GameStateManager : MonoBehaviour
     /// The mode of the game
     public GameMode mode { get; private set; }
 
-    //~~~~~~~~~~~ GameObjects ~~~~~~~~~~~~~~~~
+    //~~~~~~~~~~~~ Local State ~~~~~~~~~~~~~~
 
-    ///The board to be rendered
-    public GameObject gameBoard;
+    /// The Game board
+    Board gameBoard;
+
+    ZoneBoard zoneBoard;
+
+    //~~~~~~~~~~~ GameObjects ~~~~~~~~~~~~~~~~
 
     /// The spawn button
     public GameObject spawnButton;
@@ -52,9 +56,14 @@ public class GameStateManager : MonoBehaviour
         //Set spawn button to inactive
         spawnButton.GetComponent<Button>().interactable = false;
 
-        //Instantiate Board, instantiates the board geometry
-        gameBoard = Instantiate(gameBoard, Global.BOARD_POS, Quaternion.identity);
-        spawnPiece(1, Player.RED, new Vector2Int(5, 5));
+        //Retreive Board, instantiates the board geometry
+        gameBoard = GameObject.FindWithTag("Board").GetComponent<Board>();
+
+        //Retreive zoneBoard
+        zoneBoard = GameObject.FindWithTag("ZoneBoard").GetComponent<ZoneBoard>();
+
+        spawnPiece(1, Player.GREEN, new Vector2Int(5, 5));
+        spawnPiece(1, Player.BLUE, new Vector2Int(4, 4));
 
 
     }
@@ -105,11 +114,15 @@ public class GameStateManager : MonoBehaviour
         }
 
         //Create piece
+        newPiece.GetComponent<SpriteRenderer>().color = player == Player.BLUE ? Color.cyan : Color.green;
         Piece p = newPiece.GetComponent<Piece>();
         p.player = player;
 
         //Add piece to list
         pieces.Add(tile, newPiece);
+
+        //calculate zones
+        zoneBoard.calculateZones(pieces);
     }
 
     //Selects a a tile, highlighting any pieces
@@ -131,7 +144,7 @@ public class GameStateManager : MonoBehaviour
             //cannot select opponent pieces
             if (currentPiece.player != player)
             {
-                gameBoard.GetComponent<Board>().unselectTile();
+                gameBoard.unselectTile();
                 return;
             }
 
@@ -177,12 +190,18 @@ public class GameStateManager : MonoBehaviour
             }
 
             //Set the move highlights
-            gameBoard.GetComponent<Board>().setMoveHighlights(moves, kills, stacks);
+            gameBoard.setMoveHighlights(moves, kills, stacks);
         }
 
         //Set spawn button to active
-        //TODO: based on zone ownership
-        spawnButton.GetComponent<Button>().interactable = true;
+        //Debug.Log(zoneBoard.getTileOwner(tile));
+        if (zoneBoard.getTileOwner(tile) == player) {
+            spawnButton.GetComponent<Button>().interactable = true;
+        }
+        else
+        {
+            spawnButton.GetComponent<Button>().interactable = false;
+        }
     }
 
     //Unselects a tile
@@ -194,6 +213,8 @@ public class GameStateManager : MonoBehaviour
         //Set spawn button to inactive
         spawnButton.GetComponent<Button>().interactable = false;
     }
+
+    // ~~~~~~~~~~~~~ Actions ~~~~~~~~~~~~~~~~
 
     //Uses the selected piece and the action tile to move the piece.
     //Determines move type by destination piece occupation
@@ -221,10 +242,9 @@ public class GameStateManager : MonoBehaviour
             moveAction(selectedTile, tile);
         }
 
-        //TODO: calculate zones
-    }
-
-    // ~~~~~~~~~~~~~ Actions ~~~~~~~~~~~~~~~~
+        //calculate zones
+        zoneBoard.calculateZones(pieces);
+    }      
 
     //moves the piece
     public void moveAction(Vector2Int start, Vector2Int dest)
@@ -275,12 +295,12 @@ public class GameStateManager : MonoBehaviour
     {
         //TODO: restrict turns
         spawnPiece(1, player, selectedTile);
-        gameBoard.GetComponent<Board>().unselectTile();
+        gameBoard.unselectTile();
     }
 
     //~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~~~
 
     public BoardGeometry geometry { get {
-            return gameBoard.GetComponent<Board>().geometry;  
+            return gameBoard.geometry;  
     } }
 }
