@@ -299,6 +299,7 @@ public class GameStateManager : MonoBehaviour
         //TODO: restrict turns
         spawnPiece(1, player, selectedTile);
         gameBoard.unselectTile();
+        swicthPlayer();
     }
 
     //~~~~~~~~~~~~~ Getters ~~~~~~~~~~~~~~~~~
