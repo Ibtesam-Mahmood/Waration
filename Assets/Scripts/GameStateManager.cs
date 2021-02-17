@@ -19,7 +19,7 @@ public class GameStateManager : MonoBehaviour
     public Dictionary<Vector2Int, GameObject> pieces = new Dictionary<Vector2Int, GameObject>();
 
     /// The current player
-    public Player player = Player.BLUE;
+    public Player player = Player.NONE;
 
     /// The mode of the game
     public GameMode mode { get; private set; }
@@ -62,8 +62,10 @@ public class GameStateManager : MonoBehaviour
         //Retreive zoneBoard
         zoneBoard = GameObject.FindWithTag("ZoneBoard").GetComponent<ZoneBoard>();
 
-        spawnPiece(1, Player.GREEN, new Vector2Int(5, 5));
-        spawnPiece(1, Player.BLUE, new Vector2Int(4, 4));
+        swicthPlayer();
+
+        spawnPiece(1, Player.GREEN, new Vector2Int(16, 1));
+        spawnPiece(1, Player.BLUE, new Vector2Int(1, 16));
 
 
     }
@@ -244,6 +246,7 @@ public class GameStateManager : MonoBehaviour
 
         //calculate zones
         zoneBoard.calculateZones(pieces);
+        swicthPlayer();
     }      
 
     //moves the piece
@@ -303,4 +306,14 @@ public class GameStateManager : MonoBehaviour
     public BoardGeometry geometry { get {
             return gameBoard.geometry;  
     } }
+
+    void swicthPlayer()
+    {
+        if (player == Player.BLUE)
+            player = Player.GREEN;
+        else
+            player = Player.BLUE;
+
+        GameObject.Find("whosturn").GetComponent<SpriteRenderer>().color = player == Player.BLUE ? Color.cyan : Color.green;
+    }
 }
