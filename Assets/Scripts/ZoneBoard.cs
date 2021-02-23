@@ -87,12 +87,26 @@ public class ZoneBoard : MonoBehaviour
             pointsPerZone[z] += power;
         }
 
+        //Tally for blue and green player
+        int greenTally = 0;
+        int blueTally = 0;
+
         //set points
         foreach(KeyValuePair<Vector2Int, Zone> z in zones)
         {
             if (pointsPerZone.ContainsKey(z.Value))
             {
-                z.Value.setZone(pointsPerZone[z.Value]);
+                int points = pointsPerZone[z.Value];
+                z.Value.setZone(points);
+
+                if(points > 0)
+                {
+                    blueTally++;
+                }
+                else if(points < 0)
+                {
+                    greenTally++;
+                }
             }
             else
             {
@@ -100,14 +114,17 @@ public class ZoneBoard : MonoBehaviour
             }
         }
 
+        Player winner = Player.NONE;
+        if(greenTally >= 9)
+        {
+            winner = Player.GREEN;
+        }
+        else if(blueTally >= 9)
+        {
+            winner = Player.BLUE;
+        }
 
-        return determineWin();
-    }
-
-    //TODO: determines if there is a win and which player
-    public Player determineWin()
-    {
-        return Player.NONE;
+        return winner;
     }
 
 }

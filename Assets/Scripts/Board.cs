@@ -75,8 +75,12 @@ public class Board : MonoBehaviour
     void OnMouseDown()
     {
         //Selects a tile
-        Vector2Int tile = geometry.getTileFromAbsolute(Input.mousePosition);
-        selectTile(tile);
+        if(GameStateManager.instance.winner == Player.NONE)
+        {
+            Vector2Int tile = geometry.getTileFromAbsolute(Input.mousePosition);
+            selectTile(tile);
+        }
+        
     }
 
     public void setMoveHighlights(List<Vector2Int> moves, List<Vector2Int> kills, List<Vector2Int> stacks)

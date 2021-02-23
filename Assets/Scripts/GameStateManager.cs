@@ -21,6 +21,10 @@ public class GameStateManager : MonoBehaviour
     /// The current player
     public Player player = Player.NONE;
 
+    int turn = 2;
+
+    public Player winner = Player.NONE;
+
     /// The mode of the game
     public GameMode mode { get; private set; }
 
@@ -78,6 +82,16 @@ public class GameStateManager : MonoBehaviour
 
     //~~~~~~~~~~~~ State Functions ~~~~~~~~~~~~~~~~
 
+    private void handleWinner(Player p)
+    {
+        winner = p;
+        if(p != Player.NONE)
+        {
+            Color c = winner == Player.BLUE ? Color.cyan : Color.green;
+            updateGameText(winner == Player.BLUE ? "Blue Player Wins" : "Green Player Wins", c);
+        }
+    }
+
     /// Spawn a piece in at a given tile
     public void spawnPiece(int power, Player player, Vector2Int tile)
     {
@@ -124,7 +138,7 @@ public class GameStateManager : MonoBehaviour
         pieces.Add(tile, newPiece);
 
         //calculate zones
-        zoneBoard.calculateZones(pieces);
+        handleWinner(zoneBoard.calculateZones(pieces));
     }
 
     //Selects a a tile, highlighting any pieces
@@ -137,7 +151,7 @@ public class GameStateManager : MonoBehaviour
         if (pieces.ContainsKey(tile))
         {
 
-
+            spawnButton.GetComponent<Button>().interactable = false;
             //Select peice
             GameObject piece = pieces[tile];
 
@@ -194,16 +208,21 @@ public class GameStateManager : MonoBehaviour
             //Set the move highlights
             gameBoard.setMoveHighlights(moves, kills, stacks);
         }
-
-        //Set spawn button to active
-        //Debug.Log(zoneBoard.getTileOwner(tile));
-        if (zoneBoard.getTileOwner(tile) == player) {
-            spawnButton.GetComponent<Button>().interactable = true;
-        }
-        else
+        else 
         {
-            spawnButton.GetComponent<Button>().interactable = false;
+            //Set spawn button to active
+            //Debug.Log(zoneBoard.getTileOwner(tile));
+            if (zoneBoard.getTileOwner(tile) == player)
+            {
+                spawnButton.GetComponent<Button>().interactable = true;
+            }
+            else
+            {
+                spawnButton.GetComponent<Button>().interactable = false;
+            }
         }
+
+        
     }
 
     //Unselects a tile
@@ -245,7 +264,7 @@ public class GameStateManager : MonoBehaviour
         }
 
         //calculate zones
-        zoneBoard.calculateZones(pieces);
+        handleWinner(zoneBoard.calculateZones(pieces));
         swicthPlayer();
     }      
 
@@ -310,11 +329,27 @@ public class GameStateManager : MonoBehaviour
 
     void swicthPlayer()
     {
-        if (player == Player.BLUE)
-            player = Player.GREEN;
-        else
-            player = Player.BLUE;
+        turn = (turn + 1) % 3;
 
-        GameObject.Find("whosturn").GetComponent<SpriteRenderer>().color = player == Player.BLUE ? Color.cyan : Color.green;
+        if(turn == 0)
+        {
+            if (player == Player.BLUE)
+                player = Player.GREEN;
+            else
+                player = Player.BLUE;
+
+            Color c = player == Player.BLUE ? Color.cyan : Color.green;
+            GameObject.Find("whosturn").GetComponent<SpriteRenderer>().color = c;
+            updateGameText(player == Player.BLUE ? "Blue Player Turn" : "Green Player Turn", c);
+        }
+        
+        
+    }
+
+    void updateGameText(string newText, Color color)
+    {
+        Text text = GameObject.Find("gameText").GetComponent<Text>();
+        text.color = color;
+        text.text = newText;
     }
 }
